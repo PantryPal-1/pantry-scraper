@@ -3,6 +3,7 @@ import pandas as pd
 from bs4 import BeautifulSoup 
 import requests
 import time 
+from recipe_scrapers import scrape_me
 
 # Define the url in python 
 baseUrl = "https://www.jamieoliver.com"
@@ -20,14 +21,29 @@ links = []
 for link in soup.find_all('a'):
 	path = link.get('href')
 	if path[0:9] == '/recipes/':
-		links.append(path)
-print(links)
-#
+		links.append(baseUrl + path) # add all recipe paths within Jamie oliver
+
+#print(links)
 # Parse through each link and make sure its a recipe link
 
+for recipeLink in links:
+	scraper = scrape_me(recipeLink)
+	try:
+		print(recipeLink)
+		scraper.title()
+	except Exception as e:
+		continue
 
+	try:
+		ingredients = scraper.ingredients()
+		title = scraper.title()
+		print(title)
+		print(ingredients)
+	except Exception as e:
+		continue
+
+	
 #store in CSV data set
-
 
 
 

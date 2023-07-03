@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import requests
 import time 
 from recipe_scrapers import scrape_me
+import pandas as pd
 
 # Define the url in python 
 baseUrl = "https://www.jamieoliver.com"
@@ -13,6 +14,9 @@ url = "https://www.jamieoliver.com/recipes/category/course/mains/"
 page = requests.get(url)
 # BeautifulSoup enables to find the elements/tags in a webpage 
 soup = BeautifulSoup(page.text, "html.parser")
+
+# Create an empty DataFrame to store the recipes
+recipes_df = pd.DataFrame(columns=["Link", "Title", "Ingredients"])
 
 
 
@@ -39,11 +43,14 @@ for recipeLink in links:
 		title = scraper.title()
 		print(title)
 		print(ingredients)
+		recipes_df = recipes_df.append({"Link": recipeLink, "Title": title, "Ingredients": ingredients}, ignore_index=True)
 	except Exception as e:
 		continue
 
 	
 #store in CSV data set
+# Save the DataFrame to a CSV file
+recipes_df.to_csv("recipes.csv", index=False)
 
 
 
